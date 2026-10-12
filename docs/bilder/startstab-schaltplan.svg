@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 340" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <title id="t">Verdrahtung des Startstabs</title>
+  <desc id="d">Ein Reedkontakt liegt zwischen GPIO 4 und Masse. Der interne Pullup des ESP32-C3 hält den Pin auf HIGH, solange der Kontakt offen ist. Ist der Magnet nah, ist der Kontakt zu und der Pin liegt auf LOW.</desc>
+  <rect width="1000" height="340" fill="#0e1316"/>
+
+  <text x="40" y="40" font-size="18" font-weight="600" fill="#e4e9ec">Startstab</text>
+  <rect x="40" y="60" width="160" height="200" rx="10" fill="#192024" stroke="#354046" stroke-width="2"/>
+  <text x="120" y="150" font-size="15" text-anchor="middle" fill="#e4e9ec">ESP32-C3</text>
+  <text x="120" y="168" font-size="12" text-anchor="middle" fill="#92a2aa">SuperMini</text>
+  <text x="190" y="110" font-size="13" text-anchor="end" fill="#e4e9ec">GPIO 4</text>
+  <text x="190" y="230" font-size="13" text-anchor="end" fill="#e4e9ec">GND</text>
+
+  <g stroke="#92a2aa" stroke-width="2" fill="none">
+    <path d="M200 106 H420"/>
+    <!-- Reed als Glasroehrchen mit Schliesser -->
+    <rect x="420" y="90" width="150" height="32" rx="16" fill="#192024" stroke="#62aeda"/>
+    <path d="M440 106 H468 L496 90" stroke="#62aeda"/>
+    <path d="M552 106 H570"/>
+    <path d="M570 106 H660 V226 H200"/>
+  </g>
+  <text x="495" y="146" font-size="14" text-anchor="middle" fill="#e4e9ec">Reedkontakt (Schließer)</text>
+  <text x="495" y="164" font-size="12" text-anchor="middle" fill="#92a2aa">Glasröhrchen, im Pfosten</text>
+
+  <g>
+    <rect x="470" y="190" width="50" height="24" fill="#c0392b" stroke="#7a1f14" stroke-width="2"/>
+    <text x="495" y="207" font-size="13" font-weight="700" text-anchor="middle" fill="#fff">Magnet</text>
+    <path d="M495 188 V172" stroke="#c0392b" stroke-width="2" stroke-dasharray="3 4"/>
+  </g>
+
+  <g font-size="14" fill="#e4e9ec">
+    <text x="690" y="96">Magnet nah: Kontakt zu, Pin LOW</text>
+    <text x="690" y="116" fill="#92a2aa" font-size="13">Stange liegt an, der Stab ist scharf.</text>
+    <text x="690" y="160">Magnet weg: Kontakt offen, Pin HIGH</text>
+    <text x="690" y="180" fill="#92a2aa" font-size="13">Der interne Pullup (INPUT_PULLUP)</text>
+    <text x="690" y="198" fill="#92a2aa" font-size="13">zieht ihn hoch. Das Öffnen ist der Start.</text>
+  </g>
+  <text x="40" y="300" font-size="13" fill="#92a2aa">Nur für kurze Leitungen (Reed im selben Pfosten). Bei langen Kabeln einen externen Pullup (10 kΩ nach 3V3) ergänzen.</text>
+  <text x="40" y="320" font-size="13" fill="#92a2aa">Der Reedkontakt schaltet keine Last, nur den Pin: Kein Vorwiderstand nötig. Nach Datenblatt des gewählten Reeds prüfen.</text>
+</svg>

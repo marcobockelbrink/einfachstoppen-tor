@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 // Sender der Lichtschranke: 38 kHz Traeger in Bursts, 600 us an, 600 us aus.
 //
 // Ein TSOP-Empfaenger schaltet bei Dauerlicht ab (AGC, Vishay-Datenblatt 82459), er will

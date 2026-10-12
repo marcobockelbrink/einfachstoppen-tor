@@ -1,0 +1,26 @@
+einfachstoppen Tor und Startstab
+Copyright (c) 2026 Marco Bockelbrink, einfachstoppen.de
+
+Dieses Projekt steht je nach Art des Inhalts unter einer von drei Lizenzen. Die vollen
+Texte liegen im Ordner LICENSES/.
+
+  Software (Firmware, Tests, Werkzeuge)                       MIT
+    src/, tests/, tools/, platformio.ini                        LICENSES/MIT.txt
+
+  Hardware (Gehaeuse, Halter, Schaltplaene)                   CERN-OHL-P-2.0
+    gehaeuse/ (SCAD und STL),
+    docs/bilder/schaltplan.svg, docs/bilder/startstab-schaltplan.svg
+                                                                LICENSES/CERN-OHL-P-2.0.txt
+
+  Dokumentation, Bilder, Texte                                CC-BY-4.0
+    docs/, README.md (ausser den Schaltplaenen oben)           LICENSES/CC-BY-4.0.txt
+
+Bei CC BY und CERN-OHL-P ist die Namensnennung Pflicht, zum Beispiel:
+"Marco Bockelbrink, einfachstoppen.de". Abwandlungen und kommerzielle Nutzung sind unter
+diesen Lizenzen erlaubt; wer weitergibt, behaelt die Lizenzhinweise bei.
+
+Fremde Bausteine stehen unter ihren eigenen Lizenzen, siehe NOTICE.
+
+Es gibt keine Gewaehr. Ein Nachbau geschieht auf eigene Verantwortung: Der Entwurf ist nach
+Datenblaettern und Rechnung entstanden und war bei Veroeffentlichung nicht an echter Hardware
+erprobt.

@@ -29,3 +29,24 @@ Nicht auf der Liste: Messmittel (Multimeter, Handy-Kamera zum Sichtbarmachen der
 nützlich, aber nicht nötig.
 
 Wenn man Teile bei Amazon kaufen möchte: [amazon.md](amazon.md).
+
+## Startstab
+
+Für **einen Startstab** (statt Sender und TSOP). Anleitung: [startstab.md](startstab.md). Alle
+Größen sind **Annahmen**, die mit den echten Teilen nachzumessen sind; keine Preise geprüft.
+
+| Nr. | Teil | Anzahl | Wofür | Hinweis |
+| --- | --- | --- | --- | --- |
+| S1 | ESP32-C3 SuperMini | 1 | der Controller | wie Teil 1 oben |
+| S2 | Reedkontakt, Schließer, Glasröhrchen | 1 | meldet das Öffnen | etwa 14 mm lang, Ø 2–3 mm angenommen. Empfindlichkeit (Ampere-Windungen) und Schaltstrom im Datenblatt des gewählten Teils prüfen. |
+| S3 | Scheibenmagnet, Neodym, etwa 8 × 3 mm | 1 | sitzt am Stangenende | Schaltabstand mit dem gewählten Reed **messen**; ein stärkerer Magnet schaltet früher an und später aus. |
+| S4 | Rundstab, etwa Ø 12 mm | 1 | die Stange | Holz, Glasfaser oder Alu; Länge = Abstand der Pfosten plus Reserve. |
+| S5 | Pfosten, z. B. Kantholz 40 × 40 mm oder Rohr | 2 | tragen Stange und Elektronik | Höhe etwa Hüfte; Fuß oder Boden nach Untergrund. |
+| S6 | Scharnier oder Drehlager mit senkrechter Achse | 1 | die Stange dreht sich | muss leicht gehen und wenig Spiel haben. |
+| S7 | Zugfeder oder Gummi | 1 | stellt die Stange zurück | muss sie sicher an den Anschlag ziehen, aber leicht aufgehen. |
+| S8 | Holzschrauben 3 × 20 | 4 | Reedhalter und Gehäuse am Pfosten | |
+| S9 | Schraube M3 × 16 mit Mutter | 1 | Klemmung des Magnethalters | |
+| S10 | Kabel, zweiadrig, etwa 0,3 m | 1 | Reed zum ESP32 | kurz halten, dann reicht der interne Pullup. |
+| S11 | Sekundenkleber | 1 | Magnet im Halter, Reed im Kanal | |
+| S12 | Powerbank, USB-C-Kabel | 1 | Strom | wie Teile 8 und 9 oben |
+| S13 | 3D-gedruckt: `stab_unten`, `tor_deckel`, `stab_magnethalter`, `stab_reedhalter` | | Gehäuse und Halter | [`gehaeuse/stl/`](../gehaeuse/stl), **noch nicht gedruckt** |

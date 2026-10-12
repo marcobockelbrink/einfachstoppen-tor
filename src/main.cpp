@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 // einfachstoppen Tor: ein Sensor, ein Zeitstempel, Bluetooth zum Handy.
 //
 // Das Tor beurteilt nichts. Es sagt "jetzt ist etwas durch" und nennt die Zeit seiner
@@ -12,6 +13,8 @@
 
 // TOR_MODUS 0: jede Flanke ist ein Durchgang (Taster, Schalter, Reedkontakt).
 // TOR_MODUS 1: Impulszug eines TSOP-Empfaengers; Durchgang = die Impulse hoeren auf.
+// TOR_MODUS 2: Reedkontakt am Startstab; Durchgang = der Kontakt oeffnet, nachdem er eine
+//              Weile zu war (tor::Kontakt). TOR_OFFEN_PEGEL: Pegel bei offenem Kontakt.
 #if !defined(TOR_PIN) || !defined(TOR_FLANKE) || !defined(TOR_PULLUP) || !defined(TOR_ART) || \
     !defined(TOR_MODUS)
 #error "Sensor-Einstellungen fehlen -- eine Umgebung aus platformio.ini waehlen"
@@ -28,6 +31,12 @@ static const char* UUID_STAND = "6d1f0007-1c7e-4b6a-9a3e-0e5f7d2a4c11";        /
 constexpr uint16_t TOTZEIT_STANDARD_MS = 300;
 constexpr uint16_t TOTZEIT_MIN_MS = 20;
 constexpr uint16_t TOTZEIT_MAX_MS = 5000;
+#ifndef TOR_OFFEN_PEGEL
+#define TOR_OFFEN_PEGEL 1  // Reed zwischen Pin und GND, Pullup: zu = LOW, offen = HIGH
+#endif
+#ifndef TOR_SCHARF_MS
+#define TOR_SCHARF_MS 100  // so lange muss der Kontakt zu gewesen sein, damit das Oeffnen zaehlt
+#endif
 constexpr uint32_t WIEDERHOLUNG_MS = 2000;  // Unbestaetigtes geht nach so langer Stille nochmal raus
 
 static uint32_t bootId;  // neu bei jedem Start: danach gilt eine andere Zeitbasis
@@ -68,6 +77,24 @@ static void IRAM_ATTR beiImpuls() {
   portENTER_CRITICAL_ISR(&impulsSperre);
   letzterImpuls = t;
   portEXIT_CRITICAL_ISR(&impulsSperre);
+}
+#endif
+
+#if TOR_MODUS == 2
+// Jede Flanke wird im Interrupt mit Zeit UND Pegel gestempelt. Pegel hier lesen, nicht
+// spaeter: bis loop() dran ist, kann der Reed schon wieder geprellt haben.
+struct KontaktFlanke {
+  uint64_t t;
+  bool offen;
+};
+static QueueHandle_t kontaktFlanken;
+static tor::Kontakt kontakt(TOR_SCHARF_MS);
+
+static void IRAM_ATTR beiKontakt() {
+  KontaktFlanke f{(uint64_t)esp_timer_get_time(), gpio_get_level((gpio_num_t)TOR_PIN) == TOR_OFFEN_PEGEL};
+  BaseType_t weck = pdFALSE;
+  xQueueSendFromISR(kontaktFlanken, &f, &weck);
+  if (weck) portYIELD_FROM_ISR();
 }
 #endif
 
@@ -193,6 +220,9 @@ void setup() {
   bootId = esp_random();
   sperre = xSemaphoreCreateMutex();
   flanken = xQueueCreate(32, sizeof(uint64_t));
+#if TOR_MODUS == 2
+  kontaktFlanken = xQueueCreate(32, sizeof(KontaktFlanke));
+#endif
 
   prefs.begin("tor", false);
   totzeitMs = prefs.getUShort("totzeit", TOTZEIT_STANDARD_MS);
@@ -229,6 +259,10 @@ void setup() {
   pinMode(TOR_PIN, TOR_PULLUP ? INPUT_PULLUP : INPUT);
 #if TOR_MODUS == 1
   attachInterrupt(digitalPinToInterrupt(TOR_PIN), beiImpuls, FALLING);  // active low: Impuls kam an
+#elif TOR_MODUS == 2
+  // Der Anfangszustand zaehlt als "zu", wenn der Pin so liegt; der Stab ist nach TOR_SCHARF_MS scharf.
+  kontakt.pegel((uint64_t)esp_timer_get_time(), digitalRead(TOR_PIN) == TOR_OFFEN_PEGEL);
+  attachInterrupt(digitalPinToInterrupt(TOR_PIN), beiKontakt, CHANGE);
 #else
   attachInterrupt(digitalPinToInterrupt(TOR_PIN), beiFlanke, TOR_FLANKE);
 #endif
@@ -249,6 +283,16 @@ void loop() {
   }
   uint64_t abriss;
   if (strahl.pruefe((uint64_t)esp_timer_get_time(), &abriss)) nimmAuf(abriss);
+#elif TOR_MODUS == 2
+  // Erst den Pegel lesen, dann die Warteschlange leeren: eine Flanke, die dazwischen kommt,
+  // liegt in der Schlange und wird beim naechsten Durchlauf gemeldet, nicht verschluckt.
+  bool offenJetzt = digitalRead(TOR_PIN) == TOR_OFFEN_PEGEL;
+  KontaktFlanke f;
+  while (xQueueReceive(kontaktFlanken, &f, 0) == pdTRUE) {
+    uint64_t start;
+    if (kontakt.flanke(f.t, f.offen, &start)) nimmAuf(start);
+  }
+  kontakt.pegel((uint64_t)esp_timer_get_time(), offenJetzt);
 #else
   uint64_t t;
   while (xQueueReceive(flanken, &t, 0) == pdTRUE) nimmAuf(t);

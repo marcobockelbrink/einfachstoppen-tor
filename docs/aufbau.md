@@ -6,6 +6,8 @@
 
 ![Übersicht](bilder/uebersicht.svg)
 
+> Für den **Startstab** (Stange mit Magnet und Reedkontakt statt Strahl): [startstab.md](startstab.md).
+
 Eine Strecke besteht aus zwei Geräten: dem **Sender** (schickt Infrarot-Bursts) und dem
 **Tor** (empfängt sie, meldet das Ausbleiben). Teile: [teileliste.md](teileliste.md).
 

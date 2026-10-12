@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 // Kernlogik des Tors: ohne Arduino, ohne BLE, damit sie auf dem Rechner getestet wird.
 // Die Zeit ist immer die des Geraets in Mikrosekunden seit dem Start (esp_timer_get_time).
 #pragma once
@@ -64,6 +65,53 @@ class Strahl {
   uint32_t periode_us_;
   uint64_t letzte_ = 0;
   bool scharf_ = false;
+};
+
+// Ein Kontakt am Startstab: ein Reedschalter, zu solange der Magnet an der Stange nah ist.
+// Das Oeffnen, wenn die Stange aufgedrueckt wird, ist der Start.
+//
+// Ein Flankenzaehler reicht dafuer nicht. Die Stange federt zurueck und prellt, ein Windstoss
+// oder eine Hand bewegt sie, ein Kabel reisst ab -- jedes davon ergaebe einen Start. Darum
+// zaehlt das Oeffnen nur, wenn der Kontakt vorher mindestens scharf_us am Stueck zu war
+// ("scharf", wie beim Strahl: ein Stab ohne geschlossenen Kontakt meldet nichts). Die Zeit
+// ist die ERSTE Oeffnungsflanke, nicht die letzte.
+//
+// flanke() kommt mit dem Zeitstempel aus dem Interrupt. pegel() liest der Hauptlauf mit dem
+// Pegel des Pins nach: ging eine Flanke "zu" verloren (Warteschlange voll), wird sie hier
+// nachgeholt -- sonst bliebe der Stab fuer immer unscharf und still. pegel() meldet nie einen
+// Start: eine Zeit, die der Interrupt nicht gestempelt hat, waere geraten.
+class Kontakt {
+ public:
+  explicit Kontakt(uint32_t scharf_ms = 100) : scharf_us_((uint64_t)scharf_ms * 1000) {}
+  void setze(uint32_t scharf_ms) { scharf_us_ = (uint64_t)scharf_ms * 1000; }
+  // offen = true: der Magnet ist weg. true genau dann, wenn dies ein Start ist.
+  bool flanke(uint64_t t_us, bool offen, uint64_t* start_us) {
+    if (!offen) {
+      if (!zu_) {
+        zu_ = true;
+        zu_seit_ = t_us;
+      }
+      return false;
+    }
+    if (!zu_) return false;
+    zu_ = false;
+    if (t_us < zu_seit_ || t_us - zu_seit_ < scharf_us_) return false;
+    *start_us = t_us;
+    return true;
+  }
+  // Nur "zu" wird nachgeholt. Ein gelesenes "offen" aendert nichts: Die Flanke dazu kann im
+  // Interrupt schon gestempelt sein und in der Warteschlange liegen, und wer hier vorgreift,
+  // wirft damit den Start weg, den sie gleich meldet.
+  void pegel(uint64_t jetzt_us, bool offen) {
+    if (offen || zu_) return;
+    zu_ = true;
+    zu_seit_ = jetzt_us;
+  }
+
+ private:
+  uint64_t scharf_us_;
+  uint64_t zu_seit_ = 0;
+  bool zu_ = false;
 };
 
 // Durchgaenge warten, bis das Handy sie bestaetigt hat. Eine abgebrochene Verbindung

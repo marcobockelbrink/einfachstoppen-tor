@@ -1,0 +1,12 @@
+Fremde Bausteine, die das Projekt benutzt oder zu denen es Anleitungen gibt.
+
+NimBLE-Arduino (h2zero), Version 1.4.x: Apache License 2.0. Das habe ich im Lizenztext der
+Bibliothek gesehen. Sie wird beim Bauen von PlatformIO geladen und ist nicht Teil dieses
+Repositories.
+
+Arduino-ESP32 und die PlatformIO-Plattform espressif32: eigene Lizenzen der jeweiligen
+Projekte. Ich habe sie nicht nachgelesen. Wer fertige Firmware-Dateien (.bin) weitergibt
+und nicht nur den Quelltext, sollte sie vorher pruefen: Dann gehoeren auch deren Hinweise
+dazu.
+
+Datenblaetter (Vishay 82459 u. a.) werden nur zitiert, nicht mitgeliefert.

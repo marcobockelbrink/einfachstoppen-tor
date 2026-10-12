@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 // Native Tests der Kernlogik: tools/test.sh
 #include <cstdio>
 #include <cstdlib>
@@ -180,7 +181,106 @@ static void stand_paket_ist_little_endian() {
   PRUEFE(tor::lies32(b + 8) == 9);                                       // naechste
 }
 
+// --- Kontakt (Startstab): Reedkontakt, zu = Magnet nah, offen = Stange aufgedrueckt ---
+// Ereignis ist das OEFFNEN, und nur, wenn der Kontakt vorher eine Weile zu war. Sonst melden
+// Prellen beim Zurueckfedern, ein angestossener Stab und ein abgerissenes Kabel Starts.
+
+static void oeffnen_nach_langem_zu_meldet_die_erste_flanke() {
+  tor::Kontakt k;  // scharf nach 100 ms
+  uint64_t t = 0;
+  k.pegel(0, false);
+  PRUEFE(k.flanke(1000000, true, &t));
+  PRUEFE(t == 1000000);
+}
+
+static void prellen_beim_oeffnen_ist_ein_start() {
+  tor::Kontakt k;
+  uint64_t t = 0;
+  k.pegel(0, false);
+  PRUEFE(k.flanke(1000000, true, &t));
+  PRUEFE(!k.flanke(1001000, false, &t));  // Prellen: kurz zu
+  PRUEFE(!k.flanke(1003000, true, &t));   // und wieder auf: 2 ms zu waren kein Zuruecklegen
+}
+
+static void nach_dem_zurueckfedern_zaehlt_der_naechste_start() {
+  tor::Kontakt k;
+  uint64_t t = 0;
+  k.pegel(0, false);
+  PRUEFE(k.flanke(1000000, true, &t));
+  PRUEFE(!k.flanke(1500000, false, &t));  // Stange liegt wieder an
+  PRUEFE(k.flanke(3500000, true, &t));    // 2 s spaeter der naechste
+  PRUEFE(t == 3500000);
+}
+
+static void ein_kontakt_der_nie_zu_war_meldet_nichts() {
+  tor::Kontakt k;
+  uint64_t t = 0;
+  k.pegel(0, true);                       // offen beim Einschalten, etwa Kabel ab
+  PRUEFE(!k.flanke(500000, true, &t));
+  k.pegel(5000000, true);
+  PRUEFE(!k.flanke(6000000, true, &t));
+}
+
+static void zu_nur_kurz_macht_nicht_scharf() {
+  tor::Kontakt k;
+  uint64_t t = 0;
+  k.pegel(0, true);
+  PRUEFE(!k.flanke(1000000, false, &t));
+  PRUEFE(!k.flanke(1050000, true, &t));   // 50 ms zu, unter der Schwelle: kein Start
+  PRUEFE(!k.flanke(2000000, false, &t));
+  PRUEFE(k.flanke(2200000, true, &t));    // 200 ms zu genuegen
+}
+
+static void doppelte_flanken_zaehlen_nicht() {
+  tor::Kontakt k;
+  uint64_t t = 0;
+  k.pegel(0, false);
+  PRUEFE(k.flanke(1000000, true, &t));
+  PRUEFE(!k.flanke(1200000, true, &t));   // schon offen
+}
+
+static void eine_verlorene_zu_flanke_wird_ueber_den_pegel_ausgeglichen() {
+  tor::Kontakt k;
+  uint64_t t = 0;
+  k.pegel(0, false);
+  PRUEFE(k.flanke(1000000, true, &t));
+  // Die Flanke "zu" ging verloren (Warteschlange voll). Die Schleife liest den Pegel:
+  k.pegel(2000000, false);
+  PRUEFE(!k.flanke(2050000, true, &t));   // erst 50 ms zu: noch nicht scharf
+  k.pegel(3000000, false);
+  PRUEFE(k.flanke(3500000, true, &t));    // 500 ms zu: der Start zaehlt
+}
+
+static void eine_zweite_zu_flanke_setzt_die_zeit_seit_zu_nicht_zurueck() {
+  tor::Kontakt k;
+  uint64_t t = 0;
+  k.pegel(0, false);
+  k.flanke(950000, false, &t);            // schon zu: aendert nichts
+  k.pegel(960000, false);
+  PRUEFE(k.flanke(1000000, true, &t));    // seit 0 zu, nicht seit 950 ms
+}
+
+static void ein_gelesenes_offen_wirft_den_start_in_der_warteschlange_nicht_weg() {
+  tor::Kontakt k;
+  uint64_t t = 0;
+  k.pegel(0, false);
+  // Der Interrupt hat das Oeffnen bei 999990 gestempelt, die Schleife hat es noch nicht
+  // abgeholt, liest aber schon den Pegel "offen".
+  k.pegel(1000000, true);
+  PRUEFE(k.flanke(999990, true, &t));
+  PRUEFE(t == 999990);
+}
+
 int main() {
+  oeffnen_nach_langem_zu_meldet_die_erste_flanke();
+  prellen_beim_oeffnen_ist_ein_start();
+  nach_dem_zurueckfedern_zaehlt_der_naechste_start();
+  ein_kontakt_der_nie_zu_war_meldet_nichts();
+  zu_nur_kurz_macht_nicht_scharf();
+  doppelte_flanken_zaehlen_nicht();
+  eine_verlorene_zu_flanke_wird_ueber_den_pegel_ausgeglichen();
+  eine_zweite_zu_flanke_setzt_die_zeit_seit_zu_nicht_zurueck();
+  ein_gelesenes_offen_wirft_den_start_in_der_warteschlange_nicht_weg();
   stand_beschreibt_den_lueckenlosen_bereich();
   stand_paket_ist_little_endian();
   freier_strahl_meldet_nie();

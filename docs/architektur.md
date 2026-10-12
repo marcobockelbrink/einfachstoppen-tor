@@ -21,7 +21,8 @@ Nicht Ziel: ein Zeitnahme-System mit Hundertstel-Garantie, eine Teilnehmererkenn
 | --- | --- | --- |
 | Sender | schickt 38-kHz-Bursts über die Strecke | `src/sender.cpp` |
 | Tor (Empfänger) | stempelt den Abriss der Bursts, hält ihn bis zur Bestätigung, funkt ihn | `src/main.cpp`, `src/kern.h` |
-| Kamera-App | koppelt, gleicht die Uhr ab, rechnet um, meldet | *noch nicht gebaut* |
+| Startstab | stempelt das Öffnen eines Reedkontakts, sonst wie das Tor (`TOR_MODUS=2`) | `src/main.cpp`, `src/kern.h` (`Kontakt`) |
+| Kamera-App | koppelt, gleicht die Uhr ab, rechnet um, meldet | `einfachstoppen-ziel`, Release 0.3.0, am Gerät nicht geprüft |
 | Server | paart den Durchgang mit einem Tipp oder lässt einen Menschen zuordnen | `einfachstoppen.de`, `kamera.paaren()` |
 
 Der Server bekommt **nichts Neues**: ein Durchgang vom Tor ist für ihn ein
@@ -55,6 +56,15 @@ bei den Taps im Server, aus demselben Grund.
   Fassung wertete jede Flanke als Durchgang; beim Lesen des Vishay-Datenblatts (Rev. 2.4,
   Dok. 82459) fiel das auf, bevor Hardware lief. Jetzt ist ein Durchgang, dass die Impulse
   *aufhören*.
+- **Startstab: Öffnen zählt, wenn der Kontakt vorher zu war.** Ein reiner Flankenzähler
+  meldete das Prellen beim Zurückfedern, einen angestoßenen Stab und ein abgerissenes Kabel
+  als Start. `tor::Kontakt` verlangt, dass der Kontakt vor dem Öffnen mindestens 100 ms am
+  Stück zu war (`TOR_SCHARF_MS`), und nimmt die erste Öffnungsflanke. Ein Stab, der nie zu
+  war, meldet nichts, wie das Tor ohne Sender.
+- **Startstab: der Pegel holt nur „zu“ nach.** Geht eine „zu“-Flanke verloren (Warteschlange
+  voll), liest die Hauptschleife den Pegel und stellt „zu“ wieder her, sonst bliebe der Stab
+  für immer unscharf. Ein gelesenes „offen“ ändert nichts: Die Flanke dazu kann schon in der
+  Warteschlange liegen, und wer vorgreift, wirft den Start weg, den sie gleich meldet.
 - **Scharf erst nach dem ersten Impuls.** Ein Tor ohne Sender meldet nichts, statt eines
   Durchgangs beim Einschalten.
 - **Zeitstempel im Interrupt.** Was zwischen Flanke und Zeitnehmen liegt, wäre Messfehler.
@@ -87,6 +97,8 @@ bei den Taps im Server, aus demselben Grund.
 | Tor startet neu | neues `boot`, `seq` beginnt bei 1, Versatz gilt nicht mehr, Handy gleicht neu ab |
 | Sender fällt aus | Impulse bleiben aus: **ein Durchgang wird gemeldet**, danach nichts mehr |
 | Strahl flattert (Zweige, Regen) | Totzeit schluckt Folgeabrisse; ein einzelner ausgelassener Impuls ist unter der Haltezeit |
+| Startstab: Kabel am Reed ab oder Reed defekt | der Stab ist nie scharf und **meldet nichts**; nur ein Probedurchgang nach dem Aufstellen fängt das ab |
+| Startstab: Stange federt nicht zurück | bleibt offen, nächstes Öffnen erst nach erneutem Schließen von mindestens 100 ms |
 | Direkte Sonne, Leuchtstoffröhre | der Empfänger regelt per AGC ab; **auf echter Hardware nicht geprüft** |
 
 Der Fall „Sender fällt aus“ ist eine echte Schwäche: Das Tor kann einen leeren Akku am
@@ -98,9 +110,9 @@ Aufstellen einmal durchlaufen, Sender-Akku ausreichend) fängt das ab, die Firmw
 - Keine Zugangsdaten, kein Netz, keine Daten über Personen im Gerät.
 - Bluetooth ohne Kopplung: **jeder in Funkreichweite** kann Einstellung und Bestätigung
   schreiben, Durchgänge mitlesen und einen Sync auslösen. Schlimmstenfalls: verstellte
-  Totzeit (in Grenzen), bestätigte, also gelöschte Durchgänge, gelesene Zeiten. Ob das für
-  eine offene Bauanleitung reicht, ist vor dem Veröffentlichen zu entscheiden. Eine
-  Kopplung mit Passkey wäre die Antwort und kostet Bedienung am Start.
+  Totzeit (in Grenzen), bestätigte, also gelöschte Durchgänge, gelesene Zeiten. In der
+  Beta bleibt das so und steht offen in der Anleitung. Eine Kopplung mit Passkey wäre die
+  Antwort für den breiten Einsatz und kostet Bedienung am Start.
 - Die Meldung an den Server läuft über die Kamera-Schnittstelle und damit über den Code zum
   Mitmachen (`get_race()`); ein Tor kann sie nur mit diesem Code auslösen.
 
@@ -109,7 +121,10 @@ Aufstellen einmal durchlaufen, Sender-Akku ausreichend) fängt das ab, die Firmw
 - **Getestet** (`tools/test.sh`, per Mutation geprüft): Totzeit, Puffer, Paketformat,
   Erkennung des Strahl-Abrisses in einer Simulation (freier Strahl 10 s, Tor ohne Sender,
   Abriss auf eine halbe Periode genau, Wiederkehren, ein ausgelassener Impuls).
-- **Kompiliert** für alle vier Umgebungen (`schreibtisch`, `tor`, `tor_start`, `sender`).
+  Der Startstab-Kontakt (`tor::Kontakt`): Öffnen nach langem Zu, Prellen, Zurückfedern, nie
+  zu gewesen, zu nur kurz, doppelte Flanken, verlorene „zu“-Flanke, Rennen zwischen Pegel und
+  Warteschlange, vier Mutationen gefangen.
+- **Kompiliert** für alle fünf Umgebungen (`schreibtisch`, `tor`, `tor_start`, `sender`, `startstab`).
 - **Nicht geprüft:** alles, was Hardware braucht – Aufspielen, Koppeln, tatsächliche
   Uhrgenauigkeit über Bluetooth, Reichweite und Sonnenverhalten, Schaltung und Gehäuse.
   Die Versuche dazu stehen in [messung.md](messung.md).

@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: CERN-OHL-P-2.0
 // einfachstoppen Tor -- Gehaeuse fuer Sender und Tor (OpenSCAD).
 //
 // NICHT GERENDERT UND NICHT GEDRUCKT. Alle Masse unten sind Annahmen; das echte Board,
@@ -6,10 +7,12 @@
 //   openscad -o tor_unten.stl -D 'variante="tor"'    -D 'teil="unten"'  gehaeuse/tor.scad
 //   openscad -o tor_deckel.stl -D 'variante="tor"'   -D 'teil="deckel"' gehaeuse/tor.scad
 //   openscad -o sender_unten.stl -D 'variante="sender"' -D 'teil="unten"' gehaeuse/tor.scad
+//   openscad -o stab_unten.stl -D 'variante="stab"'   -D 'teil="unten"'  gehaeuse/tor.scad
+//   (Deckel: fuer alle Varianten derselbe. Halter fuer Stange und Reed: gehaeuse/stab.scad)
 //
 // Material: PETG, 0,2 mm Schicht, 3 Wandlinien. Die Oeffnung zeigt in +X.
 
-variante = "tor";   // "tor" (TSOP-Fenster) oder "sender" (Loch fuer eine 5-mm-LED)
+variante = "tor";   // "tor" (TSOP-Fenster), "sender" (Loch fuer eine 5-mm-LED) oder "stab" (Kabeldurchfuehrung, Schraubloecher)
 teil     = "unten"; // "unten" oder "deckel"
 
 // --- Annahmen: nachmessen! ---
@@ -21,6 +24,9 @@ tsop_d  = 8;        // Fenster vor dem TSOP (Roehrchen, Schrumpfschlauch ~6-8 mm
 led_d   = 5.3;      // Bohrung fuer eine 5-mm-LED
 mutter_sw = 11.3;   // 1/4"-UNC-Mutter, Schluesselweite (7/16" = 11,1 mm) plus Spiel
 mutter_h  = 5.8;    // Mutterhoehe plus Spiel
+
+kabel_d = 5;        // Durchfuehrung fuer das Reed-Kabel (Variante "stab")
+holz_d  = 3.4;      // Loch fuer eine Holzschraube 3 mm (Variante "stab")
 
 wand   = 2;         // Wandstaerke
 boden  = 8;         // dick genug fuer die Mutter
@@ -64,10 +70,19 @@ module unten() {
     translate([-1, aussen_y / 2 - usb_b / 2, boden + 3])
       cube([wand + 2, usb_b, usb_h]);
 
-    // Front (+X): Fenster fuer den TSOP oder Bohrung fuer die LED
+    // Front (+X): Fenster fuer den TSOP, Bohrung fuer die LED oder Durchfuehrung fuer das Kabel
     translate([aussen_x - wand - 1, aussen_y / 2, boden + innen_h / 2])
       rotate([0, 90, 0])
-        cylinder(d = (variante == "tor") ? tsop_d : led_d, h = wand + 2);
+        cylinder(d = (variante == "tor") ? tsop_d : (variante == "stab") ? kabel_d : led_d, h = wand + 2);
+
+    // Variante "stab": zwei Schraubloecher durch den Boden, mit Senkung von innen, damit das
+    // Gehaeuse an den Pfosten geschraubt werden kann. Neben dem Sechskant der Stativmutter.
+    if (variante == "stab")
+      for (dx = [-11, 11])
+        translate([aussen_x / 2 + dx, aussen_y / 2, -0.01]) {
+          cylinder(d = holz_d, h = boden + 0.02);
+          translate([0, 0, boden - 4.5]) cylinder(d = 6.5, h = 4.6);
+        }
 
     // Stativgewinde: Sechskant fuer die Mutter von unten, Durchgang fuer die Schraube
     translate([aussen_x / 2, aussen_y / 2, -0.01]) {

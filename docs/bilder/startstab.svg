@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 520" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <title id="t">Startstab von oben</title>
+  <desc id="d">Zwei Pfosten. Links ist die Stange drehbar befestigt, eine Feder zieht sie an den rechten Pfosten. Am Stangenende sitzt ein Magnet, im rechten Pfosten ein Reedkontakt und der ESP32. Wer durch das Tor läuft, drückt die Stange auf; der Magnet entfernt sich, der Kontakt öffnet, das ist der Start. Skizze, nichts gebaut.</desc>
+  <rect width="1000" height="520" fill="#0e1316"/>
+
+  <text x="40" y="40" font-size="18" font-weight="600" fill="#e4e9ec">Startstab von oben (Skizze, nichts gebaut)</text>
+
+  <!-- Pfosten -->
+  <rect x="120" y="190" width="56" height="56" fill="#354046" stroke="#92a2aa" stroke-width="2"/>
+  <rect x="824" y="190" width="56" height="56" fill="#354046" stroke="#92a2aa" stroke-width="2"/>
+  <text x="148" y="272" font-size="13" text-anchor="middle" fill="#92a2aa">Pfosten</text>
+  <text x="852" y="272" font-size="13" text-anchor="middle" fill="#92a2aa">Pfosten</text>
+
+  <!-- Stange zu -->
+  <path d="M176 218 H824" stroke="#d9a64a" stroke-width="10" stroke-linecap="round"/>
+  <!-- Stange aufgedrueckt -->
+  <path d="M176 218 L760 378" stroke="#d9a64a" stroke-width="8" stroke-linecap="round" stroke-dasharray="2 14" opacity=".8"/>
+  <circle cx="176" cy="218" r="13" fill="#192024" stroke="#d9a64a" stroke-width="3"/>
+  <text x="176" y="166" font-size="14" font-weight="600" text-anchor="middle" fill="#e4e9ec">Drehpunkt, senkrechte Achse</text>
+  <text x="176" y="184" font-size="13" text-anchor="middle" fill="#92a2aa">Zugfeder zieht die Stange zurück</text>
+
+  <!-- Magnet und Reed -->
+  <rect x="806" y="208" width="18" height="20" fill="#c0392b" stroke="#7a1f14" stroke-width="2"/>
+  <text x="815" y="223" font-size="12" font-weight="700" text-anchor="middle" fill="#fff">M</text>
+  <rect x="830" y="206" width="22" height="24" rx="3" fill="#62aeda" stroke="#2a6d94" stroke-width="2"/>
+  <text x="800" y="162" font-size="14" font-weight="600" text-anchor="end" fill="#e4e9ec">Magnet am Stangenende</text>
+  <text x="800" y="180" font-size="13" text-anchor="end" fill="#92a2aa">zu: Magnet vor dem Reed, Pin LOW</text>
+  <text x="852" y="304" font-size="14" fill="#e4e9ec" text-anchor="middle">Reed + ESP32</text>
+  <text x="852" y="322" font-size="13" fill="#92a2aa" text-anchor="middle">im Pfosten</text>
+
+  <!-- Laufrichtung -->
+  <path d="M470 470 V270" stroke="#62aeda" stroke-width="3" fill="none" stroke-dasharray="3 7"/>
+  <path d="M470 270 l-8 16 h16 z" fill="#62aeda"/>
+  <text x="486" y="440" font-size="14" fill="#62aeda">Läufer</text>
+  <text x="486" y="458" font-size="13" fill="#92a2aa">drückt die Stange auf: Magnet weg, Kontakt offen = Start</text>
+
+  <text x="40" y="502" font-size="13" fill="#92a2aa">Maße, Höhe und Verzögerung der Stange sind nicht ausgearbeitet und nicht gemessen.</text>
+</svg>

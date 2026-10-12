@@ -24,6 +24,22 @@ Erwartet (nicht belegt): einige 10 ppm für den Quarz, also wenige ms pro Stunde
 Das Ergebnis, nicht die Erwartung, kommt in `protokoll.md` an die Stelle mit dem
 „Ungemessen“-Hinweis.
 
+## Versuch 4: Startstab, Verzögerung der Stange
+
+Nur für den Startstab ([startstab.md](startstab.md)). Der Kontakt öffnet erst, wenn die Stange ein
+Stück offen ist. Wie lange das dauert und wie stark es streut, ist unbekannt.
+
+1. Startstab aufbauen, Handy mit Zeitlupen-Video (240 fps) auf die Stange richten, das Tor
+   mit dem Handy verbunden.
+2. 30-mal die Stange aufdrücken, je zehnmal langsam, normal und schnell.
+3. Je Versuch: Zeit, zu der sich die Stange im Video zu bewegen beginnt, gegen die Tor-Zeit
+   (umgerechnet).
+4. Auswertung: Mittelwert und Streuung des Unterschieds in ms, getrennt nach Geschwindigkeit.
+
+Ist die Verzögerung fest, lässt sie sich später in der App abziehen (nicht gebaut). Streut sie
+stark, ist der Startstab nicht genauer als ein Tipp mit dem Finger und sollte so beschrieben
+werden.
+
 ## Versuch 3: Verbindung kappen
 
 Tor auslösen, Funk des Handys aus, noch zweimal auslösen, Funk an. Alle drei

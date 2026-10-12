@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 400" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <title id="t">Signal am Pin des Startstabs</title>
+  <desc id="d">Der Pin liegt auf LOW, solange die Stange anliegt. Öffnet sie, geht er auf HIGH: Das ist der erste Start. Prellt der Kontakt kurz zu und wieder auf, zählt das nicht. Legt sich die Stange zurück und bleibt mindestens 100 Millisekunden zu, ist der Stab wieder scharf, und das nächste Öffnen ist der zweite Start. Nicht maßstäblich.</desc>
+  <rect width="1000" height="400" fill="#0e1316"/>
+
+  <text x="40" y="40" font-size="16" font-weight="600" fill="#e4e9ec">Pin am Reedkontakt (zu = LOW, offen = HIGH)</text>
+  <text x="50" y="104" font-size="13" fill="#92a2aa">HIGH</text>
+  <text x="50" y="204" font-size="13" fill="#92a2aa">LOW</text>
+
+  <path d="M100 200 H260 V100 H330 V200 H342 V100 H420 V200 H580 V100 H900"
+        fill="none" stroke="#62aeda" stroke-width="3"/>
+
+  <!-- Start 1 -->
+  <path d="M260 70 V230" stroke="#d9a64a" stroke-width="2" stroke-dasharray="5 5"/>
+  <text x="260" y="62" font-size="14" font-weight="600" text-anchor="middle" fill="#d9a64a">Start 1</text>
+  <text x="260" y="250" font-size="12" text-anchor="middle" fill="#92a2aa">erste Flanke zählt</text>
+
+  <!-- Prellen -->
+  <path d="M330 232 V246 H342 V232" stroke="#92a2aa" stroke-width="2" fill="none"/>
+  <text x="336" y="268" font-size="12" text-anchor="middle" fill="#92a2aa">Prellen:</text>
+  <text x="336" y="284" font-size="12" text-anchor="middle" fill="#92a2aa">zählt nicht</text>
+
+  <!-- Zuruecklegen -->
+  <path d="M420 232 V246 H580 V232" stroke="#92a2aa" stroke-width="2" fill="none"/>
+  <text x="500" y="268" font-size="12" text-anchor="middle" fill="#92a2aa">mindestens 100 ms zu:</text>
+  <text x="500" y="284" font-size="12" text-anchor="middle" fill="#92a2aa">wieder scharf</text>
+
+  <!-- Start 2 -->
+  <path d="M580 70 V230" stroke="#d9a64a" stroke-width="2" stroke-dasharray="5 5"/>
+  <text x="580" y="62" font-size="14" font-weight="600" text-anchor="middle" fill="#d9a64a">Start 2</text>
+
+  <text x="40" y="328" font-size="13" fill="#92a2aa">Ein Kabel, das nie geschlossen war oder abreißt, meldet nichts: Ohne vorheriges „zu“ ist der Stab nicht scharf.</text>
+  <text x="40" y="350" font-size="13" fill="#92a2aa">Die Zeit ist die des Öffnens am Pin. Wie lange die Stange bis dahin braucht, ist ungemessen.</text>
+  <text x="40" y="376" font-size="12" fill="#92a2aa">Nicht maßstäblich.</text>
+</svg>

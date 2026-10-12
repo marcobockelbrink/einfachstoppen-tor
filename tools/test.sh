@@ -1,4 +1,5 @@
 #!/bin/sh
+# SPDX-License-Identifier: MIT
 # Kernlogik auf dem Rechner testen. Braucht nur einen C++-Compiler.
 set -e
 cd "$(dirname "$0")/.."
