@@ -61,6 +61,8 @@ bei den Taps im Server, aus demselben Grund.
 - **Puffer mit Bestätigung statt „senden und hoffen“.** `notify()` meldet in NimBLE-Arduino 1.4
   keinen Fehler. Ob etwas ankam, weiß nur die Bestätigung vom Handy. Ohne sie geht das
   Unbestätigte nach 2 s nochmal raus; Empfänger erkennen Wiederholungen an `boot` + `seq`.
+- **Der Stand ist lesbar.** Die Bestätigung ist kumulativ; ohne den Bereich, den das Tor noch
+  hält, könnte das Handy eine Zeit löschen, deren Benachrichtigung verloren ging.
 - **Läuft der Puffer voll, fällt der älteste weg** und wird gezählt, denn auf den neuesten
   wartet gerade jemand.
 - **Bluetooth LE statt WLAN.** Kein Netz, keine Zugangsdaten im Gerät, am Waldrand

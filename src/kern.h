@@ -90,6 +90,10 @@ class Puffer {
     }
   }
   size_t anzahl() const { return anzahl_; }
+  // Die gehaltenen Nummern sind immer lueckenlos [aelteste(), naechste()): Das Handy liest
+  // diesen Bereich, bevor es bestaetigt, und bestaetigt nie etwas, das es nicht gesehen hat.
+  uint32_t aelteste() const { return anzahl_ > 0 ? daten_[kopf_].seq : naechste_seq_; }
+  uint32_t naechste() const { return naechste_seq_; }
   uint32_t verloren() const { return verloren_; }
   const Ereignis& an(size_t i) const { return daten_[(kopf_ + i) % N]; }
 
@@ -117,6 +121,7 @@ inline uint32_t lies32(const uint8_t* p) {
 
 constexpr size_t EREIGNIS_LEN = 17;  // boot u32, seq u32, t_us u64, art u8
 constexpr size_t SYNC_LEN = 16;      // nonce u32, boot u32, t_us u64
+constexpr size_t STAND_LEN = 12;     // boot u32, aelteste u32, naechste u32
 
 inline void kodiere_ereignis(uint8_t* out, uint32_t boot, const Ereignis& e) {
   schreibe32(out, boot);
@@ -129,6 +134,12 @@ inline void kodiere_sync(uint8_t* out, uint32_t nonce, uint32_t boot, uint64_t t
   schreibe32(out, nonce);
   schreibe32(out + 4, boot);
   schreibe64(out + 8, t_us);
+}
+
+inline void kodiere_stand(uint8_t* out, uint32_t boot, uint32_t aelteste, uint32_t naechste) {
+  schreibe32(out, boot);
+  schreibe32(out + 4, aelteste);
+  schreibe32(out + 8, naechste);
 }
 
 }  // namespace tor

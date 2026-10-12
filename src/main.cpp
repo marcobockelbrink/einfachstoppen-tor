@@ -23,6 +23,7 @@ static const char* UUID_SYNC = "6d1f0003-1c7e-4b6a-9a3e-0e5f7d2a4c11";         /
 static const char* UUID_BESTAETIGT = "6d1f0004-1c7e-4b6a-9a3e-0e5f7d2a4c11";   // write
 static const char* UUID_EINSTELLUNG = "6d1f0005-1c7e-4b6a-9a3e-0e5f7d2a4c11";  // read + write
 static const char* UUID_INFO = "6d1f0006-1c7e-4b6a-9a3e-0e5f7d2a4c11";         // read
+static const char* UUID_STAND = "6d1f0007-1c7e-4b6a-9a3e-0e5f7d2a4c11";        // read
 
 constexpr uint16_t TOTZEIT_STANDARD_MS = 300;
 constexpr uint16_t TOTZEIT_MIN_MS = 20;
@@ -149,6 +150,17 @@ class BestaetigtSchreiben : public NimBLECharacteristicCallbacks {
   }
 };
 
+// Das Handy liest den Bereich der Nummern, die das Tor noch haelt, bevor es bestaetigt.
+class StandLesen : public NimBLECharacteristicCallbacks {
+  void onRead(NimBLECharacteristic* c, ble_gap_conn_desc*) override {
+    uint8_t paket[tor::STAND_LEN];
+    xSemaphoreTake(sperre, portMAX_DELAY);
+    tor::kodiere_stand(paket, bootId, puffer.aelteste(), puffer.naechste());
+    xSemaphoreGive(sperre);
+    c->setValue(paket, sizeof paket);
+  }
+};
+
 static void setzeEinstellungWert() {
   uint8_t b[3] = {art, (uint8_t)(totzeitMs & 0xff), (uint8_t)(totzeitMs >> 8)};
   chEinstellung->setValue(b, sizeof b);
@@ -206,6 +218,7 @@ void setup() {
   setzeEinstellungWert();
   dienst->createCharacteristic(UUID_INFO, NIMBLE_PROPERTY::READ)
       ->setValue(std::string("einfachstoppen-tor " TOR_VERSION));
+  dienst->createCharacteristic(UUID_STAND, NIMBLE_PROPERTY::READ)->setCallbacks(new StandLesen());
   dienst->start();
 
   NimBLEAdvertising* werbung = NimBLEDevice::getAdvertising();

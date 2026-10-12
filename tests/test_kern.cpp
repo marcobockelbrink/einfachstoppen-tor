@@ -157,7 +157,32 @@ static void ein_ausgelassener_impuls_ist_noch_kein_abriss() {
   PRUEFE(s.pruefe(1200 + 4001, &ab));
 }
 
+static void stand_beschreibt_den_lueckenlosen_bereich() {
+  tor::Puffer<4> p;
+  PRUEFE(p.aelteste() == 1 && p.naechste() == 1);  // leer: nichts liegt dort
+  p.lege(10, tor::ART_ZIEL);
+  p.lege(20, tor::ART_ZIEL);
+  p.lege(30, tor::ART_ZIEL);
+  PRUEFE(p.aelteste() == 1 && p.naechste() == 4);
+  p.bestaetige(2);
+  PRUEFE(p.aelteste() == 3 && p.naechste() == 4);
+  p.bestaetige(3);
+  PRUEFE(p.aelteste() == 4 && p.naechste() == 4);  // wieder leer, naechste bleibt
+  for (int i = 0; i < 6; ++i) p.lege(i, tor::ART_ZIEL);  // Platz fuer 4: die zwei aeltesten fallen weg
+  PRUEFE(p.aelteste() == 6 && p.naechste() == 10);
+}
+
+static void stand_paket_ist_little_endian() {
+  uint8_t b[tor::STAND_LEN];
+  tor::kodiere_stand(b, 0xAABBCCDDu, 3, 9);
+  PRUEFE(b[0] == 0xDD && b[1] == 0xCC && b[2] == 0xBB && b[3] == 0xAA);  // boot
+  PRUEFE(tor::lies32(b + 4) == 3);                                       // aelteste
+  PRUEFE(tor::lies32(b + 8) == 9);                                       // naechste
+}
+
 int main() {
+  stand_beschreibt_den_lueckenlosen_bereich();
+  stand_paket_ist_little_endian();
   freier_strahl_meldet_nie();
   tor_ohne_sender_meldet_nichts();
   abriss_wird_einmal_und_auf_eine_halbe_periode_genau_gemeldet();

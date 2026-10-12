@@ -13,6 +13,7 @@ und ist in `tests/test_kern.cpp` gegen feste Bytes geprüft.
 | Bestätigt | `6d1f0004-…` | write | „bis hierhin angekommen“ |
 | Einstellung | `6d1f0005-…` | read, write | Art und Totzeit |
 | Info | `6d1f0006-…` | read | Text, z. B. `einfachstoppen-tor 0.1.0` |
+| Stand | `6d1f0007-…` | read | was das Tor noch hält |
 
 (Der Rest der UUIDs ist überall `-1c7e-4b6a-9a3e-0e5f7d2a4c11`.)
 
@@ -38,6 +39,20 @@ Das Tor hält bis zu 64 unbestätigte Durchgänge. Läuft der Puffer voll, fäll
 Ereignisses geht alles Unbestätigte erneut raus; bleibt die Bestätigung 2 s aus,
 ebenfalls. **Dieselbe Meldung kommt also mehrfach vor**, das Handy erkennt sie an
 `boot` + `seq`.
+
+## Stand (12 Byte, read)
+
+| Byte | Feld | |
+| --- | --- | --- |
+| 0–3 | `boot` u32 | wie im Ereignis |
+| 4–7 | `aelteste` u32 | kleinste Nummer, die das Tor noch hält |
+| 8–11 | `naechste` u32 | die Nummer, die das nächste Ereignis bekommt |
+
+Die gehaltenen Nummern sind immer lückenlos `[aelteste, naechste)`. Die Bestätigung ist
+kumulativ („bis einschließlich `seq`“): Das Handy liest den Stand, bevor es bestätigt, und
+bestätigt höchstens bis zu der Nummer, für die **alle** Nummern ab `aelteste` angekommen und
+verarbeitet sind. Eine Lücke heißt: Eine Benachrichtigung ging im Funk verloren; die Wiederholung
+des Tors nach 2 s füllt sie.
 
 ## Uhrenabstimmung (Sync)
 
