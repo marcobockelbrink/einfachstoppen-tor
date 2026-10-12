@@ -6,6 +6,8 @@ Bluetooth abholt. Die **Lichtschranke** (zwei ESP32-C3, ein Infrarot-Strahl) tau
 und Ziel, der **Startstab** (Stange mit Magnet und Reedkontakt, wie beim Skirennen) für den
 Start. Ein Bauvorschlag zum Nachbauen, **kein fertiges Produkt**.
 
+Die Anleitung gibt es auch online: <https://einfachstoppen.de/bauen>.
+
 ![Übersicht](docs/bilder/uebersicht.svg)
 
 Das Tor ersetzt keine Stoppuhr-Handys. Es ist eine genauere Quelle für Start oder Ziel, so
