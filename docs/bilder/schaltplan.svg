@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 460" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <title id="t">Verdrahtung von Sender und Tor</title>
+  <desc id="d">Sender: 5 Volt über 68 Ohm an die Anode der IR-LED, deren Kathode am Kollektor eines NPN-Transistors liegt. Der Emitter liegt an Masse, die Basis über 1 Kiloohm an GPIO 5. Tor: Pin 1 des TSOP an GPIO 4, Pin 2 an Masse, Pin 3 an 3,3 Volt.</desc>
+  <rect width="1000" height="460" fill="#0e1316"/>
+
+  <!-- ===== Sender ===== -->
+  <text x="40" y="40" font-size="18" font-weight="600" fill="#e4e9ec">Sender</text>
+  <rect x="40" y="56" width="140" height="150" rx="10" fill="#192024" stroke="#354046" stroke-width="2"/>
+  <text x="100" y="112" font-size="15" text-anchor="middle" fill="#e4e9ec">ESP32-C3</text>
+  <text x="100" y="130" font-size="12" text-anchor="middle" fill="#92a2aa">SuperMini</text>
+  <text x="170" y="80" font-size="13" text-anchor="end" fill="#e4e9ec">5V</text>
+  <text x="170" y="150" font-size="13" text-anchor="end" fill="#e4e9ec">GPIO 5</text>
+  <text x="170" y="196" font-size="13" text-anchor="end" fill="#e4e9ec">GND</text>
+
+  <g stroke="#92a2aa" stroke-width="2" fill="none">
+    <!-- 5V -> 68 Ohm -> LED-Anode -->
+    <path d="M180 76 H540"/>
+    <rect x="540" y="66" width="60" height="20" fill="#192024"/>
+    <path d="M600 76 H680 V108"/>
+    <!-- LED: Dreieck zeigt zur Kathode (Balken unten) -->
+    <path d="M662 108 H698 L680 138 Z" fill="#192024"/>
+    <path d="M662 142 H698"/>
+    <path d="M680 142 V172"/>
+    <!-- GPIO -> 1 kOhm -> Basis -->
+    <path d="M180 146 H230"/>
+    <rect x="230" y="136" width="60" height="20" fill="#192024"/>
+    <path d="M290 146 H330 V212 H362"/>
+    <!-- Transistor (NPN) -->
+    <circle cx="384" cy="212" r="32" fill="#192024"/>
+    <path d="M362 192 V232"/>
+    <path d="M362 202 L402 178 V172"/>
+    <path d="M362 222 L402 246 V290"/>
+    <!-- Kollektor -> Kathode -->
+    <path d="M402 172 H680"/>
+    <!-- GND -> Emitter -->
+    <path d="M180 192 H210 V290 H402"/>
+  </g>
+  <!-- Emitterpfeil -->
+  <polygon points="398,243.6 388.2,242.4 392.4,235.6" fill="#92a2aa"/>
+  <circle cx="680" cy="172" r="3.5" fill="#92a2aa"/>
+  <circle cx="402" cy="172" r="3.5" fill="#92a2aa"/>
+
+  <text x="570" y="58" font-size="13" text-anchor="middle" fill="#e4e9ec">68 Ω</text>
+  <text x="260" y="128" font-size="13" text-anchor="middle" fill="#e4e9ec">1 kΩ</text>
+  <text x="716" y="122" font-size="13" fill="#e4e9ec">IR-LED</text>
+  <text x="716" y="140" font-size="12" fill="#92a2aa">940 nm, z. B. TSAL6200</text>
+  <text x="716" y="176" font-size="12" fill="#92a2aa">Kathode (kurzes Bein) zum Kollektor</text>
+  <text x="440" y="214" font-size="13" fill="#e4e9ec">NPN BC337</text>
+  <text x="440" y="232" font-size="12" fill="#92a2aa">B, C, E im Datenblatt prüfen</text>
+
+  <!-- ===== Tor ===== -->
+  <text x="40" y="332" font-size="18" font-weight="600" fill="#e4e9ec">Tor</text>
+  <rect x="40" y="348" width="140" height="92" rx="10" fill="#192024" stroke="#354046" stroke-width="2"/>
+  <text x="110" y="376" font-size="15" text-anchor="middle" fill="#e4e9ec">ESP32-C3</text>
+  <text x="170" y="398" font-size="13" text-anchor="end" fill="#e4e9ec">GPIO 4</text>
+  <text x="170" y="416" font-size="13" text-anchor="end" fill="#e4e9ec">GND</text>
+  <text x="170" y="434" font-size="13" text-anchor="end" fill="#e4e9ec">3V3</text>
+
+  <rect x="440" y="352" width="190" height="84" rx="8" fill="#192024" stroke="#62aeda" stroke-width="2"/>
+  <text x="535" y="376" font-size="15" text-anchor="middle" fill="#e4e9ec">TSOP4838</text>
+  <text x="446" y="398" font-size="13" fill="#e4e9ec">1 OUT</text>
+  <text x="446" y="416" font-size="13" fill="#e4e9ec">2 GND</text>
+  <text x="446" y="434" font-size="13" fill="#e4e9ec">3 VS</text>
+  <g stroke="#92a2aa" stroke-width="2" fill="none">
+    <path d="M180 394 H440"/>
+    <path d="M180 412 H440"/>
+    <path d="M180 430 H440"/>
+  </g>
+  <text x="310" y="388" font-size="12" text-anchor="middle" fill="#62aeda">OUT → GPIO 4</text>
+
+  <text x="680" y="388" font-size="13" fill="#92a2aa">Die Pinbelegung gilt für TSOP44/48.</text>
+  <text x="680" y="408" font-size="13" fill="#92a2aa">Bei TSOP22/24 sind 2 und 3 vertauscht.</text>
+  <text x="680" y="428" font-size="13" fill="#92a2aa">R1/C1 an VS: siehe Vishay-Datenblatt.</text>
+</svg>

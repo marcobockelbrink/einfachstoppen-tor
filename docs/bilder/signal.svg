@@ -1,0 +1,32 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 380" role="img" aria-labelledby="t d" font-family="system-ui, -apple-system, 'Segoe UI', sans-serif">
+  <title id="t">Signal am Ausgang des Empfängers</title>
+  <desc id="d">Bei freiem Strahl zuckt der Ausgang alle 1,2 Millisekunden auf LOW. Reißt der Strahl ab, bleibt er HIGH. Vier Millisekunden nach dem letzten Impuls meldet das Tor den Durchgang, mit der Zeit des letzten Impulses plus 0,6 Millisekunden.</desc>
+  <rect width="1000" height="380" fill="#0e1316"/>
+
+  <text x="40" y="40" font-size="16" font-weight="600" fill="#e4e9ec">Ausgang des Empfängers (active low)</text>
+  <text x="50" y="94" font-size="13" fill="#92a2aa">HIGH</text>
+  <text x="50" y="154" font-size="13" fill="#92a2aa">LOW</text>
+
+  <!-- Maßstab: 40 px = 1,2 ms. 11 Impulse, dann Ruhe. -->
+  <path d="M100 90 V150 H120 V90 H140 V150 H160 V90 H180 V150 H200 V90 H220 V150 H240 V90 H260 V150 H280 V90 H300 V150 H320 V90 H340 V150 H360 V90 H380 V150 H400 V90 H420 V150 H440 V90 H460 V150 H480 V90 H900"
+        fill="none" stroke="#62aeda" stroke-width="3"/>
+  <path d="M900 90 H940" stroke="#62aeda" stroke-width="3" stroke-dasharray="4 4"/>
+
+  <g stroke-width="1.5">
+    <line x1="460" y1="70" x2="460" y2="280" stroke="#d9a64a"/>
+    <line x1="480" y1="70" x2="480" y2="306" stroke="#63bc8a"/>
+    <line x1="593" y1="70" x2="593" y2="246" stroke="#ea7b6d"/>
+  </g>
+
+  <text x="250" y="196" font-size="14" fill="#e4e9ec" text-anchor="middle">Strahl frei: ein Impuls alle 1,2 ms</text>
+  <text x="250" y="216" font-size="13" fill="#92a2aa" text-anchor="middle">(rund 830 je Sekunde, jeder ein Interrupt)</text>
+
+  <text x="452" y="284" font-size="13" fill="#d9a64a" text-anchor="end">letzter Impuls (fallende Flanke)</text>
+  <text x="488" y="310" font-size="13" fill="#63bc8a">gemeldete Zeit = letzter Impuls + 0,6 ms</text>
+  <text x="601" y="250" font-size="13" fill="#ea7b6d">nach 4 ms Stille: Abriss erkannt</text>
+
+  <text x="760" y="124" font-size="14" fill="#e4e9ec" text-anchor="middle">jemand im Strahl:</text>
+  <text x="760" y="144" font-size="14" fill="#e4e9ec" text-anchor="middle">Ausgang bleibt HIGH</text>
+
+  <text x="500" y="356" font-size="13" fill="#92a2aa" text-anchor="middle">Der Fehler der Zeit ist höchstens eine halbe Periode (0,6 ms). Erst danach kommen Totzeit, Puffer und Bluetooth.</text>
+</svg>
