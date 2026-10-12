@@ -19,7 +19,7 @@ Tipp, wenn es eindeutig ist, und lässt sonst einen Menschen zuordnen. Das Tor w
 | Kernlogik (Strahl-Abriss, Totzeit, Puffer, Pakete) | getestet, per Mutation geprüft (`tools/test.sh`) |
 | Bluetooth-Protokoll | beschrieben, **auf keinem Gerät probiert** |
 | Schaltung, Teileliste, Gehäuse | nach Datenblättern und Rechnung, **nichts davon gebaut oder gedruckt** |
-| Anbindung in der Kamera-App | **fehlt** (Suchen, Koppeln, Uhrenabgleich, Melden) |
+| Anbindung in der Kamera-App | gebaut (Zweig `tor-bluetooth` der Kamera-App, Release 0.3.0), **am Gerät nicht geprüft** |
 | Genauigkeit der Zeit über Bluetooth | **ungemessen** ([messung.md](docs/messung.md)) |
 
 Ohne die App kann man ein Tor aufbauen und im seriellen Monitor beobachten, aber keinen Lauf

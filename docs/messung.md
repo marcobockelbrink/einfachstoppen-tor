@@ -3,6 +3,9 @@
 Bisher ist **nichts davon gemessen**. Die Firmware kompiliert und die Kernlogik ist
 getestet; die Uhrenabstimmung über Bluetooth wurde auf keinem Gerät probiert.
 
+Die App, mit der diese Versuche laufen, ist die Kamera-App ab Release 0.3.0; ihre Checkliste steht im Abschnitt
+„Tor per Bluetooth“ von `docs/feldtest.md` im Repo `einfachstoppen-ziel`.
+
 ## Versuch 1: Tor-Uhr gegen sich selbst (Drift)
 
 1. Tor einschalten, mit dem Handy verbinden, Sync alle 30 s über 2 Stunden.
