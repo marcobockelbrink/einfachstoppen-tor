@@ -6,7 +6,8 @@ Bluetooth abholt. Die **Lichtschranke** (zwei ESP32-C3, ein Infrarot-Strahl) tau
 und Ziel, der **Startstab** (Stange mit Magnet und Reedkontakt, wie beim Skirennen) für den
 Start. Ein Bauvorschlag zum Nachbauen, **kein fertiges Produkt**.
 
-Die Anleitung gibt es auch online: <https://einfachstoppen.de/bauen>.
+Die Anleitung gibt es auch online: <https://einfachstoppen.de/bauen>. Die App dazu, die Kamera-App
+„einfachstoppen Kamera“, steht auf <https://einfachstoppen.de/#/kamera> (Beta über TestFlight, iPhone).
 
 ![Übersicht](docs/bilder/uebersicht.svg)
 
@@ -23,7 +24,7 @@ Tipp, wenn es eindeutig ist, und lässt sonst einen Menschen zuordnen. Das Tor w
 | Kernlogik (Strahl-Abriss, Kontakt, Totzeit, Puffer, Pakete) | getestet, per Mutation geprüft (`tools/test.sh`) |
 | Bluetooth-Protokoll | beschrieben, **auf keinem Gerät probiert** |
 | Schaltung, Teileliste, Gehäuse | nach Datenblättern und Rechnung, **nichts davon gebaut oder gedruckt** |
-| Anbindung in der Kamera-App | gebaut (Release 0.3.0, intern in TestFlight), **am Gerät nicht geprüft** |
+| Anbindung in der Kamera-App | gebaut (Release 0.3.0, [TestFlight-Beta](https://einfachstoppen.de/#/kamera) für iPhone), **am Gerät nicht geprüft** |
 | Startstab: Mechanik, Magnet- und Reedhalter | nur entworfen, **nichts gebaut, gedruckt oder gemessen** |
 | Genauigkeit der Zeit über Bluetooth | **ungemessen** ([messung.md](docs/messung.md)) |
 

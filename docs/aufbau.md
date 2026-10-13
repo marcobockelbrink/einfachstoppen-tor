@@ -102,6 +102,9 @@ Maße oben in der Datei an das echte Board anpassen (Länge, Breite, Dicke messe
 
 ## 7. Mit dem Handy verbinden
 
-**Noch nicht gebaut.** Die Kamera-App muss das Tor finden, koppeln, die Uhr abgleichen und
-die Durchgänge melden. Das Protokoll dafür steht in [protokoll.md](protokoll.md); ohne die
+Die Kamera-App („einfachstoppen Kamera“, ab Release 0.3.0, als [TestFlight-Beta für
+iPhone](https://einfachstoppen.de/#/kamera)) findet das Tor unter `Tor-XXXX`, koppelt, gleicht
+die Uhr ab und meldet die Durchgänge. Auf der Auswahlseite vor der Sitzung wählst du die Rolle
+(Start oder Ziel) und als Messart **Tor**. Die Anbindung ist gebaut und am Rechner getestet,
+**am Gerät aber nicht geprüft**. Das Protokoll steht in [protokoll.md](protokoll.md); ohne die
 App kann man das Tor aufbauen und im Monitor beobachten, aber keinen Lauf stoppen.

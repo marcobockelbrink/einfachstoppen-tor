@@ -22,7 +22,7 @@ Nicht Ziel: ein Zeitnahme-System mit Hundertstel-Garantie, eine Teilnehmererkenn
 | Sender | schickt 38-kHz-Bursts über die Strecke | `src/sender.cpp` |
 | Tor (Empfänger) | stempelt den Abriss der Bursts, hält ihn bis zur Bestätigung, funkt ihn | `src/main.cpp`, `src/kern.h` |
 | Startstab | stempelt das Öffnen eines Reedkontakts, sonst wie das Tor (`TOR_MODUS=2`) | `src/main.cpp`, `src/kern.h` (`Kontakt`) |
-| Kamera-App | koppelt, gleicht die Uhr ab, rechnet um, meldet | `einfachstoppen-ziel`, Release 0.3.0, am Gerät nicht geprüft |
+| Kamera-App | koppelt, gleicht die Uhr ab, rechnet um, meldet | `einfachstoppen-ziel`, Release 0.3.0 (TestFlight-Beta, iPhone), am Gerät nicht geprüft |
 | Server | paart den Durchgang mit einem Tipp oder lässt einen Menschen zuordnen | `einfachstoppen.de`, `kamera.paaren()` |
 
 Der Server bekommt **nichts Neues**: ein Durchgang vom Tor ist für ihn ein
